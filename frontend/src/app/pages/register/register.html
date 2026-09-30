@@ -1,0 +1,143 @@
+<div class="auth-page">
+
+  <div class="auth-card">
+
+    <div class="auth-header">
+      <div class="brand-icon">AI</div>
+
+      <h1>Create Account</h1>
+
+      <p>
+        Join the AI-Powered Placement Preparation Portal
+      </p>
+    </div>
+
+    <form (ngSubmit)="register()" #registerForm="ngForm">
+
+      <!-- Full Name -->
+      <div class="form-group">
+
+        <label for="name">Full Name</label>
+
+        <input
+          id="name"
+          type="text"
+          name="name"
+          [(ngModel)]="name"
+          placeholder="Enter your full name"
+          required
+        >
+
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+
+        <label for="email">Email</label>
+
+        <input
+          id="email"
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          placeholder="Enter your email"
+          required
+        >
+
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+
+        <label for="password">Password</label>
+
+        <input
+          id="password"
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="Create a password"
+          required
+          minlength="6"
+        >
+
+      </div>
+
+      <!-- Role -->
+      <div class="form-group">
+
+        <label for="role">Role</label>
+
+        <select
+          id="role"
+          name="role"
+          [(ngModel)]="role"
+        >
+
+          <option value="student">Student</option>
+          <option value="admin">Admin</option>
+
+        </select>
+
+      </div>
+
+      <!-- Error -->
+      <div
+        class="message error"
+        *ngIf="errorMessage"
+      >
+        {{ errorMessage }}
+      </div>
+
+      <!-- Success -->
+      <div
+        class="message success"
+        *ngIf="successMessage"
+      >
+        {{ successMessage }}
+      </div>
+
+      <!-- Register button -->
+      <button
+        type="submit"
+        class="auth-button"
+        [disabled]="loading || !registerForm.valid"
+      >
+
+        <span *ngIf="!loading">
+          Create Account
+        </span>
+
+        <span *ngIf="loading">
+          Creating Account...
+        </span>
+
+      </button>
+
+    </form>
+
+@if (errorMessage) {
+  <div class="error-message">
+    {{ errorMessage }}
+  </div>
+}
+
+@if (successMessage) {
+  <div class="success-message">
+    {{ successMessage }}
+  </div>
+}
+
+    <div class="auth-footer">
+
+      <span>Already have an account?</span>
+
+      <a routerLink="/login">
+        Login
+      </a>
+
+    </div>
+
+  </div>
+
+</div>

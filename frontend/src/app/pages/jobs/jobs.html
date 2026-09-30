@@ -1,0 +1,112 @@
+<section class="jobs-page">
+
+  <div class="jobs-hero">
+
+    <div>
+      <span class="eyebrow">PLACEMENT OPPORTUNITIES</span>
+
+      <h1>Find Your Next Opportunity</h1>
+
+      <p>
+        Explore exciting career opportunities and apply for jobs
+        that match your skills.
+      </p>
+    </div>
+
+    <div class="job-count">
+      <strong>{{ jobs.length }}</strong>
+      <span>Jobs Available</span>
+    </div>
+
+  </div>
+
+
+  <div class="jobs-container">
+
+    <div class="section-heading">
+      <div>
+        <h2>Latest Job Opportunities</h2>
+        <p>Start your career journey with the right opportunity.</p>
+      </div>
+    </div>
+
+
+    <div class="jobs-grid">
+
+      <article
+        class="job-card"
+        *ngFor="let job of jobs"
+      >
+
+        <div class="job-card-top">
+
+          <div class="company-icon">
+            {{ job.company.charAt(0) }}
+          </div>
+
+          <div>
+            <h3>{{ job.title }}</h3>
+            <p class="company">{{ job.company }}</p>
+          </div>
+
+        </div>
+
+
+        <div class="job-info">
+
+          <span>📍 {{ job.location }}</span>
+
+          <span>💼 {{ job.type }}</span>
+
+          <span>👨‍💻 {{ job.experience }}</span>
+
+        </div>
+
+
+        <div class="salary">
+          {{ job.salary }}
+        </div>
+
+
+        <p class="description">
+          {{ job.description }}
+        </p>
+
+
+        <div class="skills">
+
+          <span *ngFor="let skill of job.skills">
+            {{ skill }}
+          </span>
+
+        </div>
+
+
+        <div class="job-footer">
+
+          <button
+            class="apply-btn"
+            [class.applied]="isApplied(job.id)"
+            [disabled]="isApplied(job.id)"
+            (click)="applyJob(job)"
+          >
+
+            <span *ngIf="!isApplied(job.id)">
+              Apply Now →
+            </span>
+
+            <span *ngIf="isApplied(job.id)">
+              ✓ Applied
+            </span>
+
+          </button>
+
+        </div>
+
+      </article>
+
+    </div>
+
+  </div>
+
+</section>

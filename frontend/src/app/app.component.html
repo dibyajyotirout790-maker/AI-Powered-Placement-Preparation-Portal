@@ -1,0 +1,24 @@
+<header class="navbar">
+  <div class="brand" routerLink="/">
+    <div class="brand-icon">AI</div>
+
+    <div class="brand-text">
+      <strong>AI Powered</strong>
+      <span>Placement Portal</span>
+    </div>
+  </div>
+
+  <nav class="nav-links">
+    <a routerLink="/home" routerLinkActive="active">Home</a>
+    <a routerLink="/jobs" routerLinkActive="active">Jobs</a>
+    <a routerLink="/interview" routerLinkActive="active">Interview</a>
+    <a routerLink="/register" routerLinkActive="active">Register</a>
+    <a routerLink="/login" routerLinkActive="active" class="login-btn">
+      Login
+    </a>
+  </nav>
+</header>
+
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>

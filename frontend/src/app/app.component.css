@@ -1,0 +1,144 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f5f7ff;
+}
+
+.navbar {
+  height: 76px;
+  background: #ffffff;
+  border-bottom: 1px solid #e8eaf2;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 7%;
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  box-shadow: 0 4px 20px rgba(30, 41, 59, 0.06);
+}
+
+/* LEFT SIDE */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.brand-icon {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: linear-gradient(135deg, #635bff, #8b5cf6);
+
+  color: white;
+  font-weight: 800;
+  font-size: 15px;
+
+  box-shadow: 0 6px 16px rgba(99, 91, 255, 0.3);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.brand-text strong {
+  font-size: 17px;
+  color: #111827;
+}
+
+.brand-text span {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 3px;
+}
+
+/* RIGHT SIDE */
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #374151;
+
+  padding: 10px 16px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  border-radius: 10px;
+
+  transition: all 0.2s ease;
+}
+
+.nav-links a:hover {
+  color: #635bff;
+  background: #f1efff;
+}
+
+.nav-links a.active {
+  color: #635bff;
+}
+
+.nav-links .login-btn {
+  margin-left: 8px;
+
+  color: white;
+
+  background: linear-gradient(135deg, #635bff, #7c3aed);
+
+  box-shadow: 0 5px 14px rgba(99, 91, 255, 0.25);
+}
+
+.nav-links .login-btn:hover {
+  color: white;
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, #5148e5, #6d28d9);
+}
+
+.main-content {
+  min-height: calc(100vh - 76px);
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+  .navbar {
+    padding: 0 20px;
+    height: auto;
+    min-height: 76px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .nav-links {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+
+  .nav-links a {
+    white-space: nowrap;
+    padding: 8px 11px;
+    font-size: 13px;
+  }
+}

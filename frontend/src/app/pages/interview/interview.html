@@ -1,0 +1,165 @@
+<div class="interview-page">
+
+  <section class="interview-hero">
+
+    <span>AI INTERVIEW PREPARATION</span>
+
+    <h1>Practice. Improve. Get Hired.</h1>
+
+    <p>
+      Prepare for technical interviews with personalized
+      AI-generated questions.
+    </p>
+
+  </section>
+
+
+  <section class="interview-card" *ngIf="questions.length === 0">
+
+    <div class="card-title">
+      <h2>Start Your AI Interview</h2>
+      <p>Customize your interview before you begin.</p>
+    </div>
+
+
+    <div class="form-group">
+
+      <label>Target Job Role</label>
+
+      <input
+        type="text"
+        [(ngModel)]="role"
+        placeholder="e.g. Full Stack Developer">
+
+    </div>
+
+
+    <div class="form-row">
+
+      <div class="form-group">
+
+        <label>Difficulty</label>
+
+        <select [(ngModel)]="difficulty">
+
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+
+        </select>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>Number of Questions</label>
+
+        <select [(ngModel)]="questionCount">
+
+          <option [value]="5">5 Questions</option>
+          <option [value]="10">10 Questions</option>
+          <option [value]="15">15 Questions</option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+
+    <button
+      class="generate-btn"
+      [disabled]="loading"
+      (click)="generateInterview()">
+
+      <span *ngIf="!loading">
+        ✨ Generate Interview
+      </span>
+
+      <span *ngIf="loading">
+        Generating questions...
+      </span>
+
+    </button>
+
+  </section>
+
+
+  <!-- QUESTIONS -->
+
+  <section
+    class="question-card"
+    *ngIf="questions.length > 0">
+
+    <div class="question-header">
+
+      <span class="question-number">
+        QUESTION {{ currentQuestion + 1 }} / {{ questions.length }}
+      </span>
+
+      <span class="difficulty-badge">
+        {{ difficulty | titlecase }}
+      </span>
+
+    </div>
+
+
+    <div class="progress">
+
+      <div
+        class="progress-bar"
+        [style.width.%]="
+          ((currentQuestion + 1) / questions.length) * 100
+        ">
+      </div>
+
+    </div>
+
+
+    <h2>
+      {{ questions[currentQuestion] }}
+    </h2>
+
+
+    <textarea
+      placeholder="Write your answer here..."
+      rows="7">
+    </textarea>
+
+
+    <div class="question-actions">
+
+      <button
+        class="secondary-btn"
+        [disabled]="currentQuestion === 0"
+        (click)="previousQuestion()">
+
+        ← Previous
+
+      </button>
+
+
+      <button
+        class="primary-btn"
+        *ngIf="currentQuestion < questions.length - 1"
+        (click)="nextQuestion()">
+
+        Next Question →
+
+      </button>
+
+
+      <button
+        class="primary-btn"
+        *ngIf="currentQuestion === questions.length - 1">
+
+        Finish Interview ✓
+
+      </button>
+
+    </div>
+
+  </section>
+
+</div>
