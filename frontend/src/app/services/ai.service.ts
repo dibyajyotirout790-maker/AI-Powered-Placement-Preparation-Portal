@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AiService {
 
-  private baseUrl = 'http://localhost:5000/api/ai';
+  private baseUrl = 'http://ai-powered-placement-preparation-portal-juqep4kyg-place-x.vercel.app/api/ai';
 
   constructor(private http: HttpClient) {}
 
