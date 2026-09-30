@@ -10,17 +10,15 @@ const aiRoutes = require('./routes/aiRoutes');
 
 const app = express();
 
-// ===============================
-// DATABASE
-// ===============================
-connectDB();
-
-// ===============================
+// =====================================================
 // CORS
-// ===============================
+// =====================================================
+
 const allowedOrigins = [
   'http://localhost:4200',
   'http://localhost:4201',
+
+  // Your current Vercel frontend
   'https://ai-powered-placement-preparation-portal-juqep4kyg-place-x.vercel.app'
 ];
 
@@ -28,8 +26,8 @@ app.use(
   cors({
     origin: function (origin, callback) {
 
-      // Allow requests with no origin
-      // (Postman, server-to-server requests, etc.)
+      // Allow requests without an Origin
+      // Example: Postman/server-to-server
       if (!origin) {
         return callback(null, true);
       }
@@ -38,10 +36,19 @@ app.use(
         return callback(null, true);
       }
 
+      console.log('Blocked CORS origin:', origin);
+
       return callback(new Error('Not allowed by CORS'));
     },
 
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    methods: [
+      'GET',
+      'POST',
+      'PUT',
+      'PATCH',
+      'DELETE',
+      'OPTIONS'
+    ],
 
     allowedHeaders: [
       'Content-Type',
@@ -52,34 +59,56 @@ app.use(
   })
 );
 
-// Handle preflight requests
-app.options('*', cors());
-
-// ===============================
+// =====================================================
 // BODY PARSER
-// ===============================
+// =====================================================
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ===============================
-// TEST ROUTE
-// ===============================
+// =====================================================
+// HEALTH / TEST ROUTE
+// =====================================================
+
 app.get('/', (req, res) => {
-  res.json({
-    message: 'AI Placement Portal Backend is running'
+  res.status(200).json({
+    success: true,
+    message: 'AI Placement Portal Backend is running',
+    environment: process.env.NODE_ENV || 'production'
   });
 });
 
-// ===============================
+// =====================================================
+// DATABASE CONNECTION
+// =====================================================
+
+// Connect to MongoDB before API requests
+app.use('/api', async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error('Database connection error:', error);
+
+    res.status(500).json({
+      success: false,
+      message: 'Database connection failed'
+    });
+  }
+});
+
+// =====================================================
 // API ROUTES
-// ===============================
+// =====================================================
+
 app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/ai', aiRoutes);
 
-// ===============================
+// =====================================================
 // 404 HANDLER
-// ===============================
+// =====================================================
+
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -88,11 +117,11 @@ app.use((req, res) => {
   });
 });
 
-// ===============================
+// =====================================================
 // ERROR HANDLER
-// ===============================
-app.use((err, req, res, next) => {
+// =====================================================
 
+app.use((err, req, res, next) => {
   console.error('Server Error:', err);
 
   res.status(500).json({
@@ -101,11 +130,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ===============================
-// SERVER
-// ===============================
-const PORT = process.env.PORT || 5000;
+// =====================================================
+// VERCEL EXPORT
+// =====================================================
 
-app.listen(PORT, () => {
-  console.log(`PlaceX server running on port ${PORT}`);
-});
+module.exports = app;
