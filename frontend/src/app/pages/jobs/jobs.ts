@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 interface Job {
   id: number;
@@ -101,11 +101,21 @@ export class Jobs {
     }
   ];
 
-  constructor() {
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     this.loadAppliedJobs();
   }
 
   loadAppliedJobs(): void {
+
+    // localStorage is available only in the browser.
+    // This check prevents Vercel/Angular SSR from throwing:
+    // "ReferenceError: localStorage is not defined"
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     const stored = localStorage.getItem('placedx_applied_jobs');
 
     if (stored) {
@@ -126,10 +136,13 @@ export class Jobs {
 
     this.appliedJobs.push(job.id);
 
-    localStorage.setItem(
-      'placedx_applied_jobs',
-      JSON.stringify(this.appliedJobs)
-    );
+    // Only access localStorage in the browser.
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(
+        'placedx_applied_jobs',
+        JSON.stringify(this.appliedJobs)
+      );
+    }
 
     alert(
       `Application submitted successfully!\n\n${job.title} at ${job.company}`

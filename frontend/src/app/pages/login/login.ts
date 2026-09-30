@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api';
 
@@ -26,15 +26,18 @@ export class Login {
 
   constructor(
     private apiService: ApiService,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
-  login() {
+  login(): void {
 
+    // Clear previous messages
     this.errorMessage = '';
     this.successMessage = '';
 
-    if (!this.email || !this.password) {
+    // Validate input
+    if (!this.email.trim() || !this.password) {
       this.errorMessage = 'Please enter email and password.';
       return;
     }
@@ -46,47 +49,96 @@ export class Login {
       password: this.password
     };
 
-    console.log('Login data:', data);
+    console.log('Login data:', {
+      email: data.email
+    });
 
     this.apiService.login(data).subscribe({
 
-      next: (response) => {
+      next: (response: any) => {
 
         console.log('Login response:', response);
 
         this.loading = false;
 
-        // Save JWT if backend returns one
-        if (response?.token) {
-          localStorage.setItem('token', response.token);
-        }
+        /*
+         * localStorage is available only in the browser.
+         * This check prevents the Vercel/Angular SSR build
+         * from throwing:
+         * "ReferenceError: localStorage is not defined"
+         */
+        if (isPlatformBrowser(this.platformId)) {
 
-        // Save user information
-        if (response?.user) {
-          localStorage.setItem(
-            'user',
-            JSON.stringify(response.user)
-          );
+          // Save JWT token
+          if (response?.token) {
+            localStorage.setItem('token', response.token);
+          }
+
+          // Save user information
+          if (response?.user) {
+            localStorage.setItem(
+              'user',
+              JSON.stringify(response.user)
+            );
+          }
+
+          // Save role separately if available
+          if (response?.user?.role) {
+            localStorage.setItem(
+              'role',
+              response.user.role
+            );
+          }
         }
 
         this.successMessage =
           response?.message || 'Login successful!';
 
-        // Move to home quickly
+        /*
+         * Navigate to home page after successful login.
+         */
         setTimeout(() => {
           this.router.navigate(['/home']);
         }, 700);
       },
 
-      error: (error) => {
+      error: (error: any) => {
 
         console.error('Login error:', error);
 
         this.loading = false;
 
-        this.errorMessage =
-          error?.error?.message ||
-          'Login failed. Please check your email and password.';
+        /*
+         * Handle different possible backend error formats.
+         */
+        if (error?.error?.message) {
+
+          this.errorMessage = error.error.message;
+
+        } else if (error?.error?.error) {
+
+          this.errorMessage = error.error.error;
+
+        } else if (error?.status === 401) {
+
+          this.errorMessage =
+            'Invalid email or password.';
+
+        } else if (error?.status === 404) {
+
+          this.errorMessage =
+            'Login service not found. Please try again later.';
+
+        } else if (error?.status === 0) {
+
+          this.errorMessage =
+            'Unable to connect to the server. Please check the backend connection.';
+
+        } else {
+
+          this.errorMessage =
+            'Login failed. Please check your email and password.';
+        }
       }
 
     });
